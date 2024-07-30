@@ -8,7 +8,7 @@ base64
 PyPDF2
 PdfFileMerger
 PdfFileReader
-PyPDF2 PdfFileReader
+PyPDF2
 streamlit
 openpyxl
 xlsxwriter
