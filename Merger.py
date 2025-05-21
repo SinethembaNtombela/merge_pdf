@@ -169,6 +169,8 @@ def page_2():
 
 def page_3():
     st.header('Merge multiple excel sheets')
+    st.subheader('Note; if the excel sheets have different columns, the final data may be skewed.')
+    st.subheader('Best if used for excel sheets with the same columns.')
     uploaded_file = st.file_uploader("Choose a file", type = 'xlsx')
     if uploaded_file is not None:
         sheets_dict = pd.read_excel(uploaded_file, sheet_name=None)
