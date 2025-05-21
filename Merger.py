@@ -169,7 +169,7 @@ def page_2():
 
 def page_3():
     st.header('Merge multiple excel sheets')
-    st.subheader('Note; if the excel sheets have different columns, the final data may be skewed.')
+    st.subheader(':red[Note:] if the excel sheets have different columns, the final data may be skewed.')
     st.subheader('Best if used for excel sheets with the same columns.')
     uploaded_file = st.file_uploader("Choose a file", type = 'xlsx')
     if uploaded_file is not None:
@@ -204,7 +204,7 @@ def page_3():
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     else:
-        st.write('please upload excel file')
+        st.write('Please upload excel file')
 
 # £pages = ['Merge PDFs','Merge Sheets']
 # selected_page = st.sidebar.selectbox('Select Page', pages)
