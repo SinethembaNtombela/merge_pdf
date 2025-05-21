@@ -171,7 +171,7 @@ def page_2():
         main()
 
 def page_3():
-    st.header('Merge multiple excel sheets')
+    st.title('Merge multiple excel sheets')
     st.subheader(':red[Note:] if the excel sheets have different columns, the final data may be skewed.')
     st.subheader('Best if used for excel sheets with the same columns.')
     uploaded_file = st.file_uploader("Choose a file", type = 'xlsx')
