@@ -42,6 +42,7 @@ page = st.sidebar.radio('Navigation',['Delete PDF Page','Merge PDFs','Merge Exce
 
 def page_1():
     st.title('Delete PDF Pages')
+    
     text_paragraphs = """
         \tClick Browse  and select the the file you want to change or drag and drop the file,\n
         \tOnce selected, you can preview the pages of the PDF,\n
@@ -135,6 +136,7 @@ def page_2():
     def main():
 
         st.title("PDF Merger")
+        st.subheader(':red[This merges different PDF files into one document]')
         # File uploader for selecting PDF files folder
         text_paragraphs = """
         \tClick Browse files and select the the files you want to merge,\n
