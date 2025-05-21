@@ -139,7 +139,7 @@ def page_2():
         st.subheader(':red[This merges different PDF files into one document]')
         # File uploader for selecting PDF files folder
         text_paragraphs = """
-        \tClick Browse files and select the the files you want to merge,\n
+        \tClick Browse files and select or drag and drop :red[ALL] the files you want to merge,\n
         \tOnce selected, you will get an Output file name box, please type the name you want for your output file and select Merge PDFs,\n
         \tOnce selected, click the Download Merged PDF at the bottom of the screen and save to your selected destination.\n
         \tIf there are any issues, please contact sinethemba.ntombela@mattel.com
