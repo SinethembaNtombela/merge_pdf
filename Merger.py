@@ -42,7 +42,7 @@ page = st.sidebar.radio('Navigation',['Delete PDF Page','Merge PDFs','Merge Exce
 
 def page_1():
     st.title('Delete PDF Pages')
-    st.subheader(':red[This page is deleting specific PDF pages]')
+    st.subheader(':red[This page is for deleting specific PDF pages]')
     
     text_paragraphs = """
         \tClick Browse  and select the the file you want to change or drag and drop the file,\n
