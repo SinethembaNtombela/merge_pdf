@@ -13,6 +13,10 @@ import streamlit as st
 from openpyxl import load_workbook
 import xlsxwriter
 from io import BytesIO
+from tempfile import TemporaryDirectory
+from PIL import Image
+import os
+import fitz
 
 st.set_page_config(layout="wide")
 
@@ -33,11 +37,80 @@ st.set_page_config(layout="wide")
 # side_bg = r"C:\Users\ntombesi\OneDrive - MATTEL INC\Documents\\POS Training\SA\Toyzone\barbie_hot_wheels.png"
 # # "C:\Users\ntombesi\OneDrive - MATTEL INC\Documents\POS Training\SA\Toyzone\barbie.png"
 # sidebar_bg(side_bg)
-page = st.sidebar.radio('Navigation',['Merge PDFs','Merge Excel Sheets'])
+page = st.sidebar.radio('Navigation',['Delete PDF Page','Merge PDFs','Merge Excel Sheets',])
 # st.sidebar.radio()
 
-
 def page_1():
+    st.title('Delete PDF Pages')
+    text_paragraphs = """
+        \tClick Browse  and select the the file you want to change or drag and drop the file,\n
+        \tOnce selected, you can preview the pages of the PDF,\n
+        \tOnce you have previewed, select all the pages you want to delete in the dropdown and click Delete Selected Pages.\n
+        \tOnce Done, an option to download the new PDF will appear.\n
+        \tIf there are any issues, please contact sinethemba.ntombela@mattel.com
+         """
+    with st.expander("Hello 🙂, Click here to see instructions:"):
+         st.write(text_paragraphs)
+    selected_files = st.file_uploader("Browse or drag and drop PDF files", type=["pdf"])
+    if selected_files:
+    # Load the PDF using PyMuPDF
+        doc = fitz.open(stream=selected_files.read(), filetype="pdf")
+        num_pages = len(doc)
+        
+        st.write(f"Your PDF has **{num_pages} pages**.")
+        
+        # Step 1: Create a slider to preview pages
+        
+        page_number = st.slider("Select a page to preview", 1, num_pages, 1)
+        
+        # Extract the selected page as an image
+        page = doc[page_number - 1]
+        pix = page.get_pixmap()
+        image = pix.tobytes("png")
+        
+        # Display the image
+        st.image(image, caption=f"Page {page_number} of {num_pages}")
+        
+        # Step 2: Multi-select widget for deleting pages
+        st.write("### Select Pages to Delete")
+        pages_to_delete = st.multiselect(
+            "Select the pages you want to delete:", 
+            options=list(range(1, num_pages + 1)),  # Pages 1-based for user convenience
+            format_func=lambda x: f"Page {x}",
+        )
+        
+    # Display a delete button next to the multi-select
+        if st.button("Click Here To Delete Selected Pages"):
+            if pages_to_delete:
+                progress = st.progress(0)  # Initialize the progress bar
+                with st.spinner("Deleting selected pages..."):
+                    # Align selected pages with 0-based indexing for PyMuPDF
+                    selected_indices = [p - 1 for p in pages_to_delete]
+                    
+                    # Sort and delete pages in reverse order to avoid index mismatch
+                    for idx, page_number_to_delete in enumerate(sorted(selected_indices, reverse=True)):
+                        doc.delete_page(page_number_to_delete)
+                        progress.progress((idx + 1) / len(selected_indices))  # Update progress
+                
+                st.success("Selected pages have been deleted!")
+                
+                # Step 3: Provide a button to download the new PDF
+                st.write("### Download the Modified PDF")
+                # Save the modified PDF to an in-memory BytesIO object
+                new_pdf = BytesIO()
+                doc.save(new_pdf)
+                new_pdf.seek(0)
+                
+                st.download_button(
+                    label="Download New PDF",
+                    data=new_pdf,
+                    file_name="modified_document.pdf",
+                    mime="application/pdf",
+                )
+            else:
+                st.warning("No pages selected for deletion. Please select pages to delete.")
+
+def page_2():
     def merge_pdfs(selected_files, output_file):
         try:
             st.write("Merging PDFs...")
@@ -94,7 +167,7 @@ def page_1():
     if __name__ == "__main__":
         main()
 
-def page_2():
+def page_3():
     st.header('Merge multiple excel sheets')
     uploaded_file = st.file_uploader("Choose a file", type = 'xlsx')
     if uploaded_file is not None:
@@ -134,8 +207,9 @@ def page_2():
 # £pages = ['Merge PDFs','Merge Sheets']
 # selected_page = st.sidebar.selectbox('Select Page', pages)
 
-if page == 'Merge PDFs':
+if page == 'Delete PDF Page':
     page_1()
-    
-if page == 'Merge Excel Sheets':
+if page == 'Merge PDFs':
     page_2()
+if page == 'Merge Excel Sheets':
+    page_3()
